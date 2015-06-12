@@ -1,0 +1,30 @@
+###############################################################################
+# Find Xerces
+#
+# This sets the following variables:
+# XERCES_FOUND - True if Xerces was found.
+# XERCES_INCLUDE_DIRS - Directories containing the Xerces include files.
+# XERCES_LIBRARY_DIRS - Directories containing the Xerces library.
+# XERCES_LIBRARIES - Xerces library files.
+
+find_path(XERCES_INCLUDE_DIR dom/dom.hpp
+	HINTS "/usr/include" "/usr/local/include" "${XERCES_ROOT}/src/xercesc" "$ENV{PROGRAMFILES}")
+
+find_library(XERCES_LIBRARY_PATH xerces-c HINTS "/usr/lib" "/usr/local/lib" "${XERCES_ROOT}/lib")
+
+if(EXISTS ${XERCES_LIBRARY_PATH})
+get_filename_component(XERCES_LIBRARY ${XERCES_LIBRARY_PATH} NAME)
+find_path(XERCES_LIBRARY_DIR ${XERCES_LIBRARY} HINTS "/usr/lib" "/usr/local/lib")
+endif()
+
+set(XERCES_INCLUDE_DIRS ${XERCES_INCLUDE_DIR})
+set(XERCES_LIBRARY_DIRS ${XERCES_LIBRARY_DIR})
+set(XERCES_LIBRARIES ${XERCES_LIBRARY})
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Xerces DEFAULT_MSG XERCES_INCLUDE_DIR XERCES_LIBRARY XERCES_LIBRARY_DIR)
+
+mark_as_advanced(XERCES_INCLUDE_DIR)
+mark_as_advanced(XERCES_LIBRARY_DIR)
+mark_as_advanced(XERCES_LIBRARY)
+mark_as_advanced(XERCES_LIBRARY_PATH)

@@ -4,6 +4,11 @@
 #include <fstream>
 #include <stdexcept>
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/archives/xml.hpp>
+
 #include <e57/E57Simple.h>
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
@@ -65,6 +70,33 @@ bool extractor::extract(const char input_file[], const char output_file[], file_
 
 			data.scans.push_back(scan_data);
 		}
+
+		for (uint32_t img = 0; img < data.image_count; ++img) {
+			duraark::e57_image_metadata_t img_data;
+			e57::Image2D img_header;
+			reader.ReadImage2D(img, img_header);
+
+			img_data.name = img_header.name;
+			img_data.guid = img_header.guid;
+			img_data.description = img_header.description;
+			img_data.acquisition_datetime = img_header.acquisitionDateTime;
+			img_data.associated_data3D_guid = img_header.associatedData3DGuid;
+			img_data.sensor_vendor = img_header.sensorVendor;
+			img_data.sensor_model = img_header.sensorModel;
+			img_data.sensor_serial_number = img_header.sensorSerialNumber;
+			img_data.pose = img_header.pose;
+			img_data.visual_ref_representation = img_header.visualReferenceRepresentation;
+			img_data.pinhole_representation = img_header.pinholeRepresentation;
+			img_data.spherical_representation = img_header.sphericalRepresentation;
+			img_data.cylindrical_representation = img_header.cylindricalRepresentation;
+
+			if (img_data.visual_ref_representation.jpegImageSize != 0 || img_data.visual_ref_representation.pngImageSize != 0) img_data.representation = "visual_ref";
+			if (img_data.pinhole_representation.jpegImageSize != 0 || img_data.pinhole_representation.pngImageSize != 0) img_data.representation = "pinhole";
+			if (img_data.spherical_representation.jpegImageSize != 0 || img_data.spherical_representation.pngImageSize != 0) img_data.representation = "spherical";
+			if (img_data.cylindrical_representation.jpegImageSize != 0 || img_data.cylindrical_representation.pngImageSize != 0) img_data.representation = "cylindrical";
+
+			data.images.push_back(img_data);
+		}
 	} catch (std::exception& ex) {
 		std::cout << std::string("Exception catched while loading E57 file:\n") + ex.what();
 		return false;
@@ -79,27 +111,37 @@ bool extractor::extract(const char input_file[], const char output_file[], file_
 }
 
 bool extractor::write_file_(const char output_file[], file_type_t file_type, const e57_metadata_t& data) {
+	std::string out_str(output_file);
 	{
 		// open file for writing
-		std::ofstream out(output_file);
-		if (!out.good()) {
-			std::cout << "Error while opening \"" + std::string(output_file) + "\" for writing.\n";
-			return false;
+		std::ostream* out;
+		if (out_str == "##stdout##") {
+			out = &std::cout;
+		} else {
+			out = new std::ofstream(output_file);
+			if (!out->good()) {
+				std::cout << "Error while opening \"" + std::string(output_file) + "\" for writing.\n";
+				return false;
+			}
 		}
 
 		// call specific serialization method
 		if (file_type == XML) {
-			cereal::XMLOutputArchive ar(out); ar(cereal::make_nvp("e57_metadata", data));
+			cereal::XMLOutputArchive ar(*out); ar(cereal::make_nvp("e57_metadata", data));
 		} else if (file_type == JSON) {
-			cereal::JSONOutputArchive ar(out); ar(cereal::make_nvp("e57_metadata", data));
+			cereal::JSONOutputArchive ar(*out); ar(cereal::make_nvp("e57_metadata", data));
 		} else {
 			//data.serialize_csv(out);
 		}
-		out.close();
+		if (out_str != "##stdout##") {
+			dynamic_cast<std::ofstream*>(out)->close();
+			delete out;
+		}
 	}
 
 	return true;
 }
+
 
 
 }

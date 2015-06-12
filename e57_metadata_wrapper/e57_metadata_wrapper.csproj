@@ -41,12 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="e57_metadata_wrapper.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+	  <Compile Include="${WIN_SOURCE_DIR}\e57_metadata_wrapper\e57_metadata_wrapper.cs" />
+	  <Compile Include="${WIN_SOURCE_DIR}\e57_metadata_wrapper\Program.cs" />
+	  <Compile Include="${WIN_SOURCE_DIR}\e57_metadata_wrapper\Options.cs" />
+	  <!--<Compile Include="..\e57_metadata_wrapper\Properties\AssemblyInfo.cs" />-->
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+	  <None Include="..\e57_metadata_wrapper\App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

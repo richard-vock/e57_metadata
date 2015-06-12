@@ -39,7 +39,6 @@ add_definitions(-DXERCES_STATIC_LIBRARY)
 endif()
 
 file(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}" WIN_SOURCE_DIR)
-message(STATUS "windir: ${WIN_SOURCE_DIR}")
 configure_file(e57_metadata_wrapper/e57_metadata_wrapper.csproj "${CMAKE_BINARY_DIR}/e57_metadata_wrapper.csproj")
 include_external_msproject(
 	e57_metadata_wrapper
@@ -85,9 +84,11 @@ if (Boost_FOUND AND EIGEN_FOUND AND CEREAL_FOUND AND E57REF_FOUND AND Xerces_FOU
         install (FILES "${CMAKE_BINARY_DIR}/bin/Release/e57_metadata_wrapper.exe" DESTINATION bin)
     endif(WIN32)
 	# install header
-	install (FILES ${cpplibh} DESTINATION include)
     if (WIN32)
+        install (FILES ${cpplibh} DESTINATION include)
         install (FILES "e57_metadata_wrapper/e57_metadata_wrapper.cs" DESTINATION include)
+    else()
+        install (FILES ${cpplibh} DESTINATION include/e57_metadata)
     endif(WIN32)
 endif()
 

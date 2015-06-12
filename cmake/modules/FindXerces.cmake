@@ -38,23 +38,18 @@ find_path(Xerces_INCLUDE_DIR
     /usr/include
 )
 
-message(STATUS "root: ${XERCES_ROOT}")
-
 #if (WIN32)
 if (Xerces_USE_STATIC_LIBS)
-    message(STATUS "Xerces: Using static linkage")
     find_library(Xerces_LIBRARY_DEBUG
         NAMES xerces-c_static_3D.lib libxerces-c.a
 	PATHS "${XERCES_ROOT}/Build/Win32/VC10/Static Debug" /usr/lib
     )
-    message(STATUS "dbg: ${Xerces_LIBRARY_DEBUG}")
 
     find_library(Xerces_LIBRARY_RELEASE
         NAMES xerces-c_static_3.lib libxerces-c.a
         PATHS "${XERCES_ROOT}/Build/Win32/VC10/Static Release" /usr/lib
     )
 else(Xerces_USE_STATIC_LIBS)
-    message(STATUS "Xerces: Using dynamic linkage")
     find_library(Xerces_LIBRARY_DEBUG
         NAMES xerces-c_3D.lib libxerces-c.dll.a libxerces-c.so
 	PATHS "${XERCES_ROOT}/Build/Win32/VC10/Debug" /usr/lib
@@ -76,10 +71,6 @@ mark_as_advanced(
     Xerces_LIBRARY
 )
 
-message(STATUS ${Xerces_INCLUDE_DIR})
-message(STATUS ${Xerces_LIBRARY_DEBUG})
-message(STATUS ${Xerces_LIBRARY_RELEASE})
-message(STATUS ${Xerces_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(

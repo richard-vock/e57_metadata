@@ -49,7 +49,7 @@ include_external_msproject(
 
 file (GLOB_RECURSE cpplibh RELATIVE "${PROJECT_SOURCE_DIR}" "e57_metadata/*.hpp")
 file (GLOB_RECURSE cpplib RELATIVE "${PROJECT_SOURCE_DIR}" "e57_metadata/*.cpp")
-file (GLOB_RECURSE testcpp RELATIVE "${PROJECT_SOURCE_DIR}" "test_cpplib/*.cpp")
+file (GLOB_RECURSE testcpp RELATIVE "${PROJECT_SOURCE_DIR}" "e57_metadata_extractor/*.cpp")
 #file (GLOB_RECURSE units RELATIVE "${PROJECT_SOURCE_DIR}" "test/units/*.cpp")
 if (Boost_FOUND AND EIGEN_FOUND AND CEREAL_FOUND AND E57REF_FOUND AND Xerces_FOUND AND (E57SIMPLE_FOUND OR NOT CMAKE_COMPILER_IS_GNUCXX))
 	include_directories(${EIGEN_INCLUDE_DIRS})
@@ -71,12 +71,12 @@ if (Boost_FOUND AND EIGEN_FOUND AND CEREAL_FOUND AND E57REF_FOUND AND Xerces_FOU
 	else()
 		target_link_libraries(e57_metadata ${Boost_LIBRARIES} ${E57REF_LIBRARIES} ${Xerces_LIBRARY})
 	endif()
-	add_executable(test_cpplib ${testcpp})
-	target_link_libraries(test_cpplib e57_metadata)
+	add_executable(e57_metadata_extractor ${testcpp})
+	target_link_libraries(e57_metadata_extractor e57_metadata)
 
 	# install binary
 	install (TARGETS e57_metadata DESTINATION bin)
-	install (TARGETS test_cpplib DESTINATION bin)
+	install (TARGETS e57_metadata_extractor DESTINATION bin)
 	install (FILES "${CMAKE_BINARY_DIR}/bin/Release/e57_metadata_wrapper.exe" DESTINATION bin)
 	# install header
 	install (FILES ${cpplibh} DESTINATION include)

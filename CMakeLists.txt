@@ -77,9 +77,13 @@ if (Boost_FOUND AND EIGEN_FOUND AND CEREAL_FOUND AND E57REF_FOUND AND Xerces_FOU
 	# install binary
 	install (TARGETS e57_metadata DESTINATION bin)
 	install (TARGETS e57_metadata_extractor DESTINATION bin)
-	install (FILES "${CMAKE_BINARY_DIR}/bin/Release/e57_metadata_wrapper.exe" DESTINATION bin)
+    if (WIN32)
+        install (FILES "${CMAKE_BINARY_DIR}/bin/Release/e57_metadata_wrapper.exe" DESTINATION bin)
+    endif(WIN32)
 	# install header
 	install (FILES ${cpplibh} DESTINATION include)
-	install (FILES "e57_metadata_wrapper/e57_metadata_wrapper.cs" DESTINATION include)
+    if (WIN32)
+        install (FILES "e57_metadata_wrapper/e57_metadata_wrapper.cs" DESTINATION include)
+    endif(WIN32)
 endif()
 

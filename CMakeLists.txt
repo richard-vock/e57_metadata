@@ -79,7 +79,9 @@ if (Boost_FOUND AND EIGEN_FOUND AND CEREAL_FOUND AND E57REF_FOUND AND Xerces_FOU
     else()
         install (TARGETS e57_metadata DESTINATION lib)
     endif(WIN32)
-	install (TARGETS e57_metadata_extractor DESTINATION bin)
+
+    install (TARGETS e57_metadata_extractor DESTINATION bin)
+
     if (WIN32)
         install (FILES "${CMAKE_BINARY_DIR}/bin/Release/e57_metadata_wrapper.exe" DESTINATION bin)
     endif(WIN32)
